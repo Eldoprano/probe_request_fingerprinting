@@ -1,0 +1,5 @@
+*.pcap
+*.pdf
+*.png
+*.pyc
+elt_entropy_table_*.txt
