@@ -2,4 +2,6 @@
 *.pdf
 *.png
 *.pyc
+*.zip
+*.xlsx
 elt_entropy_table_*.txt

@@ -583,15 +583,16 @@ elt_id_ext_map = {
 }
 
 def human_readable_elt(elt_id):
-    # Human readable elt_id?
-    name = "Nonexistent"
-    try:
-        if(elt_id < 255):
-            name = elt_id_map[elt_id]
-        # If it is an extended elt_id, we extract it's extended id
-        elif(elt_id // 256 == 255):
-            name = "EXT: " + elt_id_ext_map[elt_id % 256]
-    except KeyError as e:
-        pass
-
-    return name
+    result = None
+    # Check if the element ID is a standard tag
+    if elt_id < 255:
+        result = elt_id_map.get(elt_id)
+    # Check if the element ID is an extended tag
+    else:
+        result = "EXT: " + elt_id_ext_map.get(elt_id % 255)
+        
+    if result is None:
+        print(f"Warning: Element ID {elt_id} is nonexistent")
+        result = "Nonexistent"
+        
+    return result

@@ -14,15 +14,15 @@ TAG_ENTIRE_FRAME = 252 # It had the ID 255 (an ex-reserved ID), but we now ananl
 TAG_CAPA_ORDER = 253  # Custom element
 TAG_MAC_FRAME = 254
 
-def make_stats(labels, matrix, name, output="latex/elt_entropy_table"):
+def make_stats(labels, matrix, name, output="./outputs/latex/elt_entropy_table"):
     output += "_" + name + ".txt"
     with open(output, 'w') as outputfile:
         for i in range(0, len(labels)):
             outputfile.write("%s & %.3f\\\\\n" % (labels[i], sum(matrix[i])))
 
-def make_heatmap(dictionary, range_x=None, inverted=True, show=False, name='heatmap.png'):
-    if not os.path.exists("./latex"):
-        os.makedirs("./latex")
+def make_heatmap(dictionary, range_x=None, inverted=True, show=False, name='heatmap.png', scale_min = 0.0):
+    if not os.path.exists("./outputs/latex"):
+        os.makedirs("./outputs/latex")
     # Histogram example code
     #x = np.random.randn(8873)
     #y = np.random.randn(8873)
@@ -48,7 +48,6 @@ def make_heatmap(dictionary, range_x=None, inverted=True, show=False, name='heat
             info_order = dictionary[key]
             info_order_set = True
             continue
-            labels.append("Information element order")
         else:
             labels.append(human_readable_elt(key))
         matrix.append(dictionary[key])
@@ -59,7 +58,7 @@ def make_heatmap(dictionary, range_x=None, inverted=True, show=False, name='heat
         matrix.append(info_order)
 
     # Make a LaTeX table of the heatmap as well
-    make_stats(labels, matrix, name)
+    # make_stats(labels, matrix, name)
 
     # Set data range
     plt.clf()
@@ -80,12 +79,13 @@ def make_heatmap(dictionary, range_x=None, inverted=True, show=False, name='heat
     plt.gcf().set_size_inches(20, 2.00)
 
     # Plot figure
-    fig = plt.imshow(matrix, origin='lower', cmap=plt.get_cmap(colormap), interpolation='none', aspect='auto')  # Other nice ones: inferno, Blues, YlOrBr
+    fig = plt.imshow(matrix, origin='lower', cmap=plt.get_cmap(colormap), interpolation='none', aspect='auto', vmin=scale_min, vmax=1.0)  # Other nice ones: inferno, Blues, YlOrBr
+    plt.title(name)
     plt.colorbar(fig, orientation='vertical', pad=0.01)
-    fig.set_clim(0.0, 1.0)
+    fig.set_clim(scale_min, 1.0)
     print("Saving heatmap to %s" % name)
-    plt.savefig(name, bbox_inches='tight', dpi=(300), format='pdf')
-    plt.savefig(name+".png", bbox_inches='tight', dpi=(500), format='png')
+    # plt.savefig("./outputs/" + name, bbox_inches='tight', dpi=(300), format='pdf')
+    plt.savefig("./outputs/" + name + ".png", bbox_inches='tight', dpi=(500), format='png')
 
     if show:
         plt.show()
