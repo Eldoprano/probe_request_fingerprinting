@@ -176,7 +176,7 @@ class BitAnalyzer:
 class ProbeRequestAnalyzer:
     """Class to analyze Wi-Fi probe requests from pcap files."""
     
-    def __init__(self, filename: str, num_samples: int = None):
+    def __init__(self, filename: str, num_samples: int = 1000):
         self.filename = filename
         self.num_samples = num_samples
         self.bit_analyzer = BitAnalyzer()

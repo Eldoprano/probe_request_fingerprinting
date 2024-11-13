@@ -149,7 +149,6 @@ def experiment_with_identification(stability_threshold: float = 0.95, suitabilit
 
 
 if __name__ == "__main__":
-    # analyzer = ProbeRequestAnalyzer(filename="./pcaps/merged_dataset_2.pcap", num_samples=69700)
     analyzer.load_and_analyze()
     analyzer.plot_results(stability_thresholds=PLOT_STABILITY_THRESHOLDS)
     
