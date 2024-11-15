@@ -24,18 +24,6 @@ pip install -r requirements.txt
 ```
 
 ## Usage
-### Stability and Suitability analysis
-```python
-from analyzer import ProbeRequestAnalyzer
-
-# Initialize analyzer with pcap file
-analyzer = ProbeRequestAnalyzer(filename="./pcaps/capture.pcap")
-
-# Run analysis
-analyzer.load_and_analyze()
-analyzer.plot_results(stability_thresholds=[0.9])
-```
-
 ### Fingerprinting
 ```python
 from scapy.all import rdpcap, Dot11ProbeReq
@@ -49,7 +37,26 @@ packets = rdpcap('pcaps/chamber.pcap')
 for packet in tqdm(packets):
     # Check if the packet is a ProbeRequest
     if packet.haslayer(Dot11ProbeReq):
-        # Get the identifier from the packet
+        # Get the identifier from the packet (using the default mask)
         identifier = analyzer.get_id(packet)
         print(f'Identifier: {identifier}')
 ```
+
+### Stability and Suitability analysis
+```python
+from analyzer import ProbeRequestAnalyzer
+
+# Initialize analyzer with pcap file
+analyzer = ProbeRequestAnalyzer(filename="./pcaps/capture.pcap")
+
+# Run analysis
+analyzer.load_and_analyze()
+analyzer.plot_results(stability_thresholds=[0.9])
+```
+
+## File Descriptions
+- [`analyzer.py`](analyzer.py): Contains the core logic for analyzing probe requests and generating device identifiers.
+- [`plotting.py`](plotting.py): Slightly modified from the [original implementation](https://github.com/rpp0/wifi-mac-tracking), it generates the heatmaps.
+- [`scapy_tags.py`](scapy_tags.py): Modified and expanded from the [original implementation](https://github.com/rpp0/wifi-mac-tracking), it contains the information elements and their tags.
+- [`example.ipynb`](example.ipynb): Jupyter notebook with a simple example of how to generate identifiers.
+- [`experiments.ipynb`](experiments.ipynb): Jupyter notebook with experiments and analysis of the stability and variability of information elements and fingerprints.
