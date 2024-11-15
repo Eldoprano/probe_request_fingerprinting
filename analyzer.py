@@ -182,8 +182,9 @@ class ProbeRequestAnalyzer:
         self.bit_analyzer = BitAnalyzer()
         self.ORDER_IE_ID = 253
 
-    def load_and_analyze(self):
-        """Loads and analyzes probe requests from pcap file and adds bit data to BitAnalyzer."""
+    def extract_information_elements(self):
+        """Extracts information elements from probe requests and associates them with MAC addresses."""
+
         unique_macs = {}
         frame_count = 0
         with PcapReader(self.filename) as pcap_reader:
@@ -225,7 +226,7 @@ class ProbeRequestAnalyzer:
             self.num_samples = frame_count
         print(f"Loaded and analyzed packets from {self.filename} with {len(unique_macs)} unique MAC addresses")
 
-    def plot_results(self, stability_thresholds: List[float]):
+    def render_stability_suitability_heatmaps(self, stability_thresholds: List[float]):
         """Plots heatmaps for stability and suitability data based on given thresholds."""
         base_filename = self.filename.split('/')[-1].split('.')[0]
         
