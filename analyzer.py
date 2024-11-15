@@ -116,7 +116,7 @@ class BitAnalyzer:
         
         return self.masks
 
-    def extract_identifier(self, packet, masks) -> str:
+    def get_fingerprint(self, packet, masks) -> str:
         """Extract identifier from a packet using masks calculated based on bit suitability."""
         identifier_parts = []
         order_bits = ''
@@ -169,7 +169,7 @@ class BitAnalyzer:
             # Use a default mask if none is provided
             masks = {1: [32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63], 50: [2, 3, 4, 5, 9, 11, 12, 14, 17, 18, 19, 20, 25, 28, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63], 45: [0, 1, 4, 5, 6, 7, 9, 11, 15, 20, 21, 32, 33, 34, 35, 36, 37, 38, 39], 127: [12, 21, 22, 23, 24, 30, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 58, 59, 60, 61, 62, 63, 65, 66, 67, 68, 69, 70, 71], 253: [26, 27, 31, 32, 33, 34, 35, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79], 191: [8, 12, 23, 37, 48, 49, 50, 52, 53, 54, 62, 69, 80, 81, 82, 84, 85, 86, 94], 107: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55]}
         # Return the last 8 hex characters of the SHA-256 hash of the identifier
-        identifier = self.extract_identifier(packet, masks)
+        identifier = self.get_fingerprint(packet, masks)
         identifier_hash = hashlib.sha256(identifier.encode()).hexdigest()
         return identifier_hash[-8:]
     
@@ -226,13 +226,15 @@ class ProbeRequestAnalyzer:
             self.num_samples = frame_count
         print(f"Loaded and analyzed packets from {self.filename} with {len(unique_macs)} unique MAC addresses")
 
-    def render_stability_suitability_heatmaps(self, stability_thresholds: List[float]):
-        """Plots heatmaps for stability and suitability data based on given thresholds."""
+    def render_stability_heatmap(self):
+        """Plots heatmap for stability data."""
         base_filename = self.filename.split('/')[-1].split('.')[0]
-        
         stability_data = self.bit_analyzer.calculate_stability()
-        plotting.make_heatmap(stability_data, name=f"heatmap_sta_{base_filename}", scale_min = 0.9)
-        
+        plotting.make_heatmap(stability_data, name=f"heatmap_sta_{base_filename}", scale_min=0.9)
+
+    def render_suitability_heatmaps(self, stability_thresholds: List[float]):
+        """Plots heatmaps for suitability data based on given thresholds."""
+        base_filename = self.filename.split('/')[-1].split('.')[0]
         for threshold in stability_thresholds:
             suitability_data = self.bit_analyzer.calculate_suitability(threshold)
             plotting.make_heatmap(suitability_data, name=f"heatmap_sui{threshold}_{base_filename}")

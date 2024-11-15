@@ -83,9 +83,9 @@ def make_heatmap(dictionary, range_x=None, inverted=True, name='heatmap.png', sc
     plt.title(name)
     plt.colorbar(fig, orientation='vertical', pad=0.01)
     fig.set_clim(scale_min, 1.0)
-    print("Saving heatmap to %s" % name)
     # plt.savefig("./outputs/" + name, bbox_inches='tight', dpi=(300), format='pdf')
     plt.savefig("./outputs/" + name + ".png", bbox_inches='tight', dpi=(500), format='png')
+    plt.show()
 
 
 if __name__ == "__main__":
