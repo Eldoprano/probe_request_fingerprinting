@@ -20,7 +20,7 @@ def make_stats(labels, matrix, name, output="./outputs/latex/elt_entropy_table")
         for i in range(0, len(labels)):
             outputfile.write("%s & %.3f\\\\\n" % (labels[i], sum(matrix[i])))
 
-def make_heatmap(dictionary, range_x=None, inverted=True, show=False, name='heatmap.png', scale_min = 0.0):
+def make_heatmap(dictionary, range_x=None, inverted=True, name='heatmap.png', scale_min = 0.0):
     if not os.path.exists("./outputs/latex"):
         os.makedirs("./outputs/latex")
     # Histogram example code
@@ -86,9 +86,6 @@ def make_heatmap(dictionary, range_x=None, inverted=True, show=False, name='heat
     print("Saving heatmap to %s" % name)
     # plt.savefig("./outputs/" + name, bbox_inches='tight', dpi=(300), format='pdf')
     plt.savefig("./outputs/" + name + ".png", bbox_inches='tight', dpi=(500), format='png')
-
-    if show:
-        plt.show()
 
 
 if __name__ == "__main__":
